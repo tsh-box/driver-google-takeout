@@ -1,0 +1,52 @@
+{
+  "name": "databox-driver-google-takeout",
+  "version": "1.0.0",
+  "description": "A Databox driver for google takeout data",
+  "config": {
+    "registry": "localhost:5000"
+  },
+  "scripts": {
+    "test": "./node_modules/mocha/bin/mocha",
+    "start": "node ./src/main.js",
+    "build": "docker build -t databox/databox-driver-google-takeout .",
+    "deploy": "docker tag databox/databox-driver-google-takeout $npm_package_config_registry/databox-driver-google-takeout && docker push $npm_package_config_registry/databox-driver-google-takeout",
+    "build-arm": "docker build -f Dockerfile-arm -t databox/databox-driver-google-takeout-arm .",
+    "deploy-arm": "docker tag databox/databox-driver-google-takeout-arm $npm_package_config_registry/databox-driver-google-takeout-arm && docker push $npm_package_config_registry/databox-driver-google-takeout-arm",
+    "clean": "node ./node_modules/modclean/bin/modclean.js -p ./node_modules/ -r",
+    "getshell": "docker exec -i -t databox-driver-google-takeout /bin/bash",
+    "kill": "docker kill databox-driver-google-takeout",
+    "attach": "docker attach databox-driver-google-takeout",
+    "shell": "docker run -i -t databox/databox-driver-google-takeout /bin/bash",
+    "local": "docker run -i -t databox/databox-driver-google-takeout"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Toshbrown/databox-driver-google-takeout.git"
+  },
+  "keywords": [
+    "google",
+    "takeout",
+    "location",
+    "browsing history",
+    "search history"
+  ],
+  "author": "Anthony Brown",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Toshbrown/databox-driver-google-takeout/issues"
+  },
+  "homepage": "https://github.com/Toshbrown/databox-driver-google-takeout#readme",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "modclean": "^2.1.0",
+    "node-databox": "^0.4.0",
+    "pug": "^2.0.0-beta11",
+    "url": "^0.11.0"
+  },
+  "devDependencies": {
+    "assert": "^1.4.1",
+    "mocha": "^3.1.2",
+    "supertest": "^2.0.0"
+  }
+}

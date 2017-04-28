@@ -1,0 +1,105 @@
+doctype html
+html(lang='en')
+	head
+		title Databox Google Takeout Driver
+		script(src='ui/jquery-3.2.0.min.js')
+		style.
+			body  {
+				font-size: 1.25rem;
+				font-weight: 300;
+			}
+			
+			h1 {
+				font-size: 2.5rem;
+				margin-bottom: 1rem;
+			}		
+			h2 {
+				font-size: 1.75rem;
+				margin-bottom: .8rem;
+			}		
+			p, ul {
+				margin: .5rem;
+			}
+			label {
+				display: inline-block;
+				width: 10em;
+			}
+			input {
+				font-size: 1rem;
+			}
+	body
+		h1 Databox Google Takeout Driver
+		h2 Browsing History (BrowserHistory.json)
+		form(id='form_upload_history')
+			p
+				label(for='history') #{'Browsing history'}
+				input(id='history', type='file')
+			p
+				button(id='upload_history' type='button' value='Upload') Upload
+				span(id='upload_history_msg')
+		
+		h2 Location History (LocationHistory.json)
+		form(id='form_upload_location')
+			p
+				label(for='locations') #{'Location history'}
+				input(id='locations', type='file')
+			p
+				button(id='upload_locations' type='button' value='Upload') Upload
+				span(id='upload_locations_msg')
+
+
+		script.
+			$(document).ready(function(){
+
+				let save = (dataArray,start,batchSize,htmlOutput,url) => {
+					
+					if(start >= dataArray.length) {
+						htmlOutput.text('Upload finished. ' + dataArray.length + ' itmes added.');
+						return;
+					}
+
+					if(start+batchSize > dataArray.length)  {
+						batchSize = dataArray.length - start;
+					}
+
+					let batch = dataArray.slice(start,start+batchSize);
+
+					$.ajax({
+							url: url,
+							type: 'POST',
+							cache: false,
+							contentType: 'application/json',
+							data: JSON.stringify(batch),
+						})
+						.done(()=>{
+							htmlOutput.text('Uploaded ' + (start+batchSize) + ' of ' + dataArray.length);
+							save(dataArray,start+batchSize+1,batchSize,htmlOutput,url)
+						});
+
+				}
+
+				$('#upload_history').click(function(){
+					$('#upload_history_msg').text(' uploading ....')
+					let file = $('#history')[0].files[0];
+					let fr = new FileReader();
+					fr.onload = receivedText;
+					fr.readAsText(file);
+					function receivedText() {           
+						const j = JSON.parse(fr.result);
+						save(j["Browser History"],0,200,$('#upload_history_msg'),'ui/uploadBrowsingHistory');
+					}
+					    
+				});
+
+				$('#upload_locations').click(function(){
+					$('#upload_locations_msg').text(' uploading ....')
+					let file = $('#locations')[0].files[0];
+					let fr = new FileReader();
+					fr.onload = receivedText;
+					fr.readAsText(file);
+					function receivedText() {     
+						const j = JSON.parse(fr.result);
+						save(j["locations"],0,3000,$('#upload_locations_msg'),'ui/uploadLocationHistory');
+					}            
+				});
+			});
