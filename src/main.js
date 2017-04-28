@@ -5,7 +5,7 @@ const databox = require('node-databox');
 const bodyParser = require('body-parser');
 
 //Databox Env Vars
-const DATABOX_STORE_BLOB_ENDPOINT = process.env.DATABOX_DRIVER_GOOGLE_TAKEOUT_DATABOX_STORE_BLOB_ENDPOINT;
+const DATABOX_STORE_BLOB_ENDPOINT = process.env.DATABOX_DRIVER_GOOGLE_TAKEOUT_DATABOX_STORE_BLOB_MONGO_ENDPOINT;
 const HTTPS_SERVER_CERT = process.env.HTTPS_SERVER_CERT || '';
 const HTTPS_SERVER_PRIVATE_KEY = process.env.HTTPS_SERVER_PRIVATE_KEY || '';
 const credentials = {
