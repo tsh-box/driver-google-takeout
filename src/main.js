@@ -3,15 +3,16 @@ const https = require('https');
 const express = require("express");
 const databox = require('node-databox');
 const bodyParser = require('body-parser');
+const fs = require('fs')
 
 //Databox Env Vars
-const DATABOX_STORE_BLOB_ENDPOINT = process.env.DATABOX_DRIVER_GOOGLE_TAKEOUT_DATABOX_STORE_BLOB_MONGO_ENDPOINT;
-const HTTPS_SERVER_CERT = process.env.HTTPS_SERVER_CERT || '';
-const HTTPS_SERVER_PRIVATE_KEY = process.env.HTTPS_SERVER_PRIVATE_KEY || '';
-const credentials = {
-	key:  HTTPS_SERVER_PRIVATE_KEY,
-	cert: HTTPS_SERVER_CERT,
-};
+const DATABOX_STORE_BLOB_ENDPOINT = process.env.DATABOX_STORE_ENDPOINT;
+
+const HTTPS_SECRETS = JSON.parse( fs.readFileSync("/run/secrets/DATABOX_PEM") );
+var credentials = {
+  key:  HTTPS_SECRETS.clientprivate || '',
+  cert: HTTPS_SECRETS.clientcert || '',
+};		
 const PORT = process.env.port || '8080';
 
 const save = (datasourceid,data) => {
