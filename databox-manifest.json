@@ -1,7 +1,7 @@
 {
   "manifest-version": 1,
 
-  "name": "databox-driver-google-takeout",
+  "name": "driver-google-takeout",
   "version": "0.1.0",
 
   "description": "A simple Databox driver for google takeout data",
@@ -18,14 +18,14 @@
     "search history"
   ],
 
-  "homepage": "https://github.com/me-box/databox-driver-google-takeout",
+  "homepage": "https://github.com/me-box/driver-google-takeout",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/me-box/databox-driver-google-takeout.git"
+    "url": "git+https://github.com/me-box/driver-google-takeout.git"
   },
 
   "resource-requirements": {
-    "store":"databox-store-blob-mongo"
+    "store":"store-json"
   }
   
 }

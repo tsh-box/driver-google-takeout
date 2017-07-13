@@ -1,4 +1,4 @@
-# databox-driver-google-takeout
+# driver-google-takeout
 
 Databox driver to support bulk import of google takeout data.
 
