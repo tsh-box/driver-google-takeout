@@ -29,7 +29,7 @@ html(lang='en')
 			}
 	body
 		h1 Databox Google Takeout Driver
-		h2 Browsing History (BrowserHistory.json)
+		h2 Browsing History (BrowserHistory.json) - store-json
 		form(id='form_upload_history')
 			p
 				label(for='history') #{'Browsing history'}
@@ -38,7 +38,16 @@ html(lang='en')
 				button(id='upload_history' type='button' value='Upload') Upload
 				span(id='upload_history_msg')
 		
-		h2 Location History (LocationHistory.json)
+		h2 Browsing History (BrowserHistory.json) - store-timeseries
+		form(id='form_upload_history_ts')
+			p
+				label(for='history_ts') #{'Browsing history'}
+				input(id='history_ts', type='file')
+			p
+				button(id='upload_history_ts' type='button' value='Upload') Upload
+				span(id='upload_history_msg_ts')
+
+		h2 Location History (LocationHistory.json)  
 		form(id='form_upload_location')
 			p
 				label(for='locations') #{'Location history'}
@@ -87,6 +96,19 @@ html(lang='en')
 					function receivedText() {           
 						const j = JSON.parse(fr.result);
 						save(j["Browser History"],0,200,$('#upload_history_msg'),'ui/uploadBrowsingHistory');
+					}
+					    
+				});
+
+				$('#upload_history_ts').click(function(){
+					$('#upload_history_msg_ts').text(' uploading ....')
+					let file = $('#history_ts')[0].files[0];
+					let fr = new FileReader();
+					fr.onload = receivedText;
+					fr.readAsText(file);
+					function receivedText() {           
+						const j = JSON.parse(fr.result);
+						save(j["Browser History"],0,200,$('#upload_history_msg_ts'),'ui/uploadBrowsingHistoryTS');
 					}
 					    
 				});

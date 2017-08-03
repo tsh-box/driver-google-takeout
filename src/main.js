@@ -6,14 +6,19 @@ const bodyParser = require('body-parser');
 const fs = require('fs')
 
 //Databox Env Vars
-const DATABOX_STORE_BLOB_ENDPOINT = process.env.DATABOX_STORE_ENDPOINT;
+const DATABOX_STORE_JSON_ENDPOINT = process.env.DATABOX_STORE_JSON_ENDPOINT;
+const DATABOX_STORE_TIMESERIES_ENDPOINT = process.env.DATABOX_STORE_TIMESERIES_ENDPOINT;
 
 const credentials = databox.getHttpsCredentials();
 
 const PORT = process.env.port || '8080';
 
 const save = (datasourceid,data) => {
-  return databox.timeseries.write(DATABOX_STORE_BLOB_ENDPOINT, datasourceid, data);
+  return databox.storetimeseries.write(DATABOX_STORE_JSON_ENDPOINT + '/' + datasourceid, data);
+};
+
+const saveTS = (datasourceid,data) => {
+  return databox.storetimeseries.write(DATABOX_STORE_TIMESERIES_ENDPOINT + '/' + datasourceid, data);
 };
 
 var app = express();
@@ -49,6 +54,24 @@ app.post('/ui/uploadBrowsingHistory', function(req, res) {
     
 });
 
+app.post('/ui/uploadBrowsingHistoryTS', function(req, res) {
+    if(!req.body) {
+      res.status(400).send({status:'error', msg:"Invalid format"});
+      return;
+    }
+
+    let proms = req.body.map((data) => {
+      data.timestamp = parseInt(data.time_usec/1000);
+      return saveTS('googleBrowsingHistoryTS',data);
+    });
+    
+    Promise.all(proms)
+    .then(()=>{
+      res.send({status:'success', msg:"done"});
+    });
+    
+});
+
 app.post('/ui/uploadLocationHistory', function(req, res) {
     if(!req.body) {
       res.status(400).send({status:'error', msg:"Invalid format"});
@@ -71,11 +94,11 @@ app.get("/status", function(req, res) {
 });
 
 
-  databox.waitForStoreStatus(DATABOX_STORE_BLOB_ENDPOINT,'active',10)
+  databox.waitForStoreStatus(DATABOX_STORE_JSON_ENDPOINT,'active',10)
   .then(() => {
     //register datasources
     proms = [
-      databox.catalog.registerDatasource(DATABOX_STORE_BLOB_ENDPOINT, {
+      databox.catalog.registerDatasource(DATABOX_STORE_JSON_ENDPOINT, {
         description: 'Google takeout browsing history',
         contentType: 'text/json',
         vendor: 'Google',
@@ -83,12 +106,38 @@ app.get("/status", function(req, res) {
         datasourceid: 'googleBrowsingHistory',
         storeType: 'databox-store-blob'
       }),
-      databox.catalog.registerDatasource(DATABOX_STORE_BLOB_ENDPOINT, {
+      databox.catalog.registerDatasource(DATABOX_STORE_JSON_ENDPOINT, {
         description: 'Google takeout location history',
         contentType: 'text/json',
         vendor: 'Google',
         type: 'googleLocationHistory',
         datasourceid: 'googleLocationHistory',
+        storeType: 'databox-store-blob'
+      })
+    ];
+    
+    return Promise.all(proms);
+  })
+  .then(() => {
+    return databox.waitForStoreStatus(DATABOX_STORE_TIMESERIES_ENDPOINT,'active',10)
+  })
+  .then(() => {
+    //register datasources
+    proms = [
+      databox.catalog.registerDatasource(DATABOX_STORE_TIMESERIES_ENDPOINT, {
+        description: 'Google takeout browsing history',
+        contentType: 'text/json',
+        vendor: 'Google',
+        type: 'googleBrowsingHistory',
+        datasourceid: 'googleBrowsingHistoryTS',
+        storeType: 'databox-store-blob'
+      }),
+      databox.catalog.registerDatasource(DATABOX_STORE_TIMESERIES_ENDPOINT, {
+        description: 'Google takeout location history',
+        contentType: 'text/json',
+        vendor: 'Google',
+        type: 'googleLocationHistory',
+        datasourceid: 'googleLocationHistoryTS',
         storeType: 'databox-store-blob'
       })
     ];
