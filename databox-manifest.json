@@ -2,7 +2,7 @@
   "manifest-version": 1,
 
   "name": "driver-google-takeout",
-  "version": "0.1.0",
+  "version": "0.3.0",
 
   "description": "A simple Databox driver for google takeout data",
   "author": "Anthony Brown <Anthony.Brown@nottingham.ac.uk> ()",
@@ -25,7 +25,7 @@
   },
 
   "resource-requirements": {
-    "store":"store-json"
+    "store":"core-store"
   }
-  
+
 }
