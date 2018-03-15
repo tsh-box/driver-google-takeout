@@ -18,10 +18,10 @@
     "search history"
   ],
 
-  "homepage": "https://github.com/me-box/driver-google-takeout",
+  "homepage": "https://github.com/tsh2/driver-google-takeout",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/me-box/driver-google-takeout.git"
+    "url": "git+https://github.com/tsh2/driver-google-takeout.git"
   },
 
   "resource-requirements": {
