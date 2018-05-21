@@ -21,7 +21,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tsh2/driver-google-takeout.git"
+    "url": "git+https://github.com/tsh-box/driver-google-takeout.git"
   },
   "keywords": [
     "google",
@@ -33,9 +33,9 @@
   "author": "Anthony Brown",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/tsh2/driver-google-takeout/issues"
+    "url": "https://github.com/tsh-box/driver-google-takeout/issues"
   },
-  "homepage": "https://github.com/tsh2/driver-google-takeout#readme",
+  "homepage": "https://github.com/tsh-box/driver-google-takeout#readme",
   "dependencies": {
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
